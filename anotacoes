@@ -1,4 +1,4 @@
-*** Fluxo do docker run	***
+### Fluxo do docker run	###
 Primeiro irá tentar executar o container local de acordo com o nome que foi passado, caso o mesmo não encontre irá buscar no repositório do docker hub, realizará a verificação do hash, e executará o container (caso não esteja baixado, irá baixar antes)
 
 > Baixar uma imagem do docker
@@ -37,9 +37,6 @@ Primeiro irá tentar executar o container local de acordo com o nome que foi pas
 	cd ~	// ir para a home
 	touch arquivo.txt
 	ls
-
-
-###		TESTES EXECUÇÃO MAQUINA UBUNTU		###
 
 
 > Remover um container
@@ -83,7 +80,7 @@ Testando no navegador:
 
 *** Imagens são compostas por uma ou mais camadas; Imagens são imutáveis ***
 
-***  Criar uma imagem no docker no diretorio atual	***
+###  Criar uma imagem no docker no diretorio atual	###
 	docker build -t	jugoliv/app-node:1.0 .	//	"-t" => etiquetar a imagem, "." => contexto do diretório atual
 
 	docker images
@@ -95,6 +92,24 @@ Testando no navegador:
 > Atualização de uma nova versão da imagem, com as parametrizações alteradas nos arquivos
 	docker build -t jugoliv/app-node:1.1 .   
 	docker run -d -p 8080:6000 jugoliv/app-node:1.1
+
+
+### 	Problema de persistir dados em container	###
+> Volumes: Com volumes, é possível escrever os dados em uma camada persistente
+> Bind mounts: É possível escrever os dados em uma camada persistente baseado na estrutura de pastas do host.
+
+// -v => Tudo o que for gravado no diretório /app será persistido no diretório apontado (no caso localmente estou utilizando /Users/jugoliv/Documents/Alura/Docker/docker-volume)
+	docker run -it -v /Users/jugoliv/Documents/Alura/Docker/docker-volume:/app ubuntu bash
+
+// ir para o diretório app e adicionar um arquivo qualquer
+
+> Rodando novamente, rodando assim uma nova imagem, é utilizado o mesmo diretório com o arquivo de testes persistido anteriormente
+
+> Utilizando a forma recomendada pelo Docker utilizando o --mount
+	docker run -it --mount type=bind,source=/Users/jugoliv/Documents/Alura/Docker/docker-volume,target=/app ubuntu bash
+
+
+
 
 
 
