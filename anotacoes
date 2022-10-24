@@ -84,12 +84,17 @@ Testando no navegador:
 *** Imagens são compostas por uma ou mais camadas; Imagens são imutáveis ***
 
 ***  Criar uma imagem no docker no diretorio atual	***
-	docker build -t	jugoliv/app-node:1.0	//	"-t" => etiquetar a imagem, "." => contexto do diretório atual
+	docker build -t	jugoliv/app-node:1.0 .	//	"-t" => etiquetar a imagem, "." => contexto do diretório atual
 
 	docker images
 	docker run -d -p 8080:3000 jugoliv/app-node:1.0
 
+> Parar todos os containers em execução
+	docker stop $(docker container ls -q)
 
+> Atualização de uma nova versão da imagem, com as parametrizações alteradas nos arquivos
+	docker build -t jugoliv/app-node:1.1 .   
+	docker run -d -p 8080:6000 jugoliv/app-node:1.1
 
 
 
