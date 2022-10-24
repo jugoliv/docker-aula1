@@ -1,0 +1,98 @@
+*** Fluxo do docker run	***
+Primeiro irá tentar executar o container local de acordo com o nome que foi passado, caso o mesmo não encontre irá buscar no repositório do docker hub, realizará a verificação do hash, e executará o container (caso não esteja baixado, irá baixar antes)
+
+> Baixar uma imagem do docker
+	docker pull ubuntu
+
+*** No caso do ubuntu, ao executar o comando run (aparentemente não demonstrando que não foi realizada nenhuma ação o exibição de mensagem), irá executar o container e entrar no comando default "bash", como não há mais nenhuma tarefa, o container é finalizado. Para manter o ubunto em execução, podemos por exemplo rodar o comando abaixo, para que o mesmo permaneça com o processo em execução.
+	docker run ubuntu sleep 1d		// 1d = 1 dia
+
+
+
+> Rodar um container
+	docker run hello-world
+
+> Listar containers em execução
+	docker ps
+
+> Outra maneira de listar os conteiners em execução
+	docker container ls
+
+> Listar containers NÃO estão em execução
+	docker ps -a
+
+*** Para que o container se mantenha ativo é necessário estar ativo pelo menos UM processo em execução ***
+
+> Parar um container
+	docker stop gin-api-rest-postgres-1 	// <container id, ou names>
+
+> Para reexecutar um container
+	docker start gin-api-rest-postgres-1 	// <container id, ou names>
+
+> Executar algum comando interativo no container
+	docker exec -it c744d9c6ea89 bash		// c744d9c6ea89 como se fosse o id de um container ubuntu, executando o comando bash
+
+###		TESTES EXECUÇÃO MAQUINA UBUNTU		###
+	docker exec -it bf9c0f689a7d bash
+	cd ~	// ir para a home
+	touch arquivo.txt
+	ls
+
+
+###		TESTES EXECUÇÃO MAQUINA UBUNTU		###
+
+
+> Remover um container
+	docker rm 5bbf5c87e7f2	// <container id, ou names>
+
+
+###		Teste utilizando um cenário de uma imagem contento um site 		###
+docker run -d dockersamples/static-site		// -d para não deixar travado o terminal enquanto esta executando o container
+
+> Parar e remover de forma "bruta"
+	docker rm ca4a2ec4e70e --force
+
+docker run -d -P dockersamples/static-site		// -P para mapear as portas internas do container para nosso host (na versão de comando anterior não é mapeado a porta 80 para utilizarmos)
+
+> Verificar como esta o mapeamento de portas de um container
+	docker port f2522ec940d9
+Exemplo de retorno:
+jugoliv@MacBook-de-Juliano ~ % docker port f2522ec940d9
+443/tcp -> 0.0.0.0:55000
+80/tcp -> 0.0.0.0:55001
+
+Testando no navegador:
+	http://localhost:55001/
+
+> Realizando o mapeamento manualmente com -p
+	docker run -d -p 8080:80 dockersamples/static-site
+
+> Docker images, para listar as imagens, id, data de criação e tamanho
+	docker images
+
+> Para detalhes das informações sobre a imagem
+	docker inspect f589ccde7957
+
+> Verificar as camadas que formam a imagem
+	docker history f589ccde7957
+
+
+*** No docker há a reutilização de camadas, ou seja,  para cada nova imagem adicionada é baixada apenas as camadas que ainda não foram baixadas anteriormente. Isso é util para evitar duplicidade. ***
+
+*** Um container é leve pq consegue reaproveitar as camadas. Novos containers apenas reutilizam as mesmas imagens com uma CAMADA ADICIONAL DE READ E WRITE, para adicionar dados TEMPORÁRIOS (no exemplo de adicionar um arquivo no ubuntu, na verdade não estava sendo escrito na imagem, visto que a mesma é IMUTÁVEL, mas sim sendo escrito nesta fina e leve camada de R/W) ***
+
+*** Imagens são compostas por uma ou mais camadas; Imagens são imutáveis ***
+
+***  Criar uma imagem no docker no diretorio atual	***
+	docker build -t	jugoliv/app-node:1.0	//	"-t" => etiquetar a imagem, "." => contexto do diretório atual
+
+	docker images
+	docker run -d -p 8080:3000 jugoliv/app-node:1.0
+
+
+
+
+
+
+
+
